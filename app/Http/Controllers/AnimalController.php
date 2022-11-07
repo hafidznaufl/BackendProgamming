@@ -21,7 +21,6 @@ class AnimalController extends Controller
     # parameter: hewan baru
     public function store(Request $data)
     {
-        return $data->all();
         array_push($this->animals, $data->newAnimal);
         $this->index();
         # gunakan method array_push untuk menambahkan data baru
