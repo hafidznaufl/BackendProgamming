@@ -11,14 +11,15 @@ class Student {
         });
     }
 
-    static create( data ) {
+    static create(data) {
         return new Promise((resolve, reject) => {
-            const query = `INSERT INTO students ( nama, nim, email, jurusan) VALUES ( '"+nama+"', '"+nim+"', '"+email+"', '"+jurusan+"')`;
-
-            db.query(query, data , (err, results) => {
+            const query = `INSERT INTO students SET ?`
+            
+            db.query(query, data, (err, results) => {
                 resolve(results)
             })
         });
+
     }
 }
 
