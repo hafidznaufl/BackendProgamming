@@ -3,18 +3,34 @@ const Student = require('../models/Student')
 class StudentController {
 
     async index( req, res ){
-        const students = await Student.all()
+        const student = await Student.all()
         
-        const data = {
-            message: "Menampilkan Data Semua Students",
-            data: students
+        if (student) {
+            const data = {
+                message: "Menampilkan Data Semua Students",
+                data: student
+            }
+            
+            return res.status(200).json(data)
+        } else {
+            const data = {
+                message: "Student Not Found",
+            }
+            
+            return res.status(404).json(data)
         }
-
-        res.json(data)
     }
 
     async store ( req, res ){
         const { nama, nim, email, jurusan } = req.body;
+
+        if( !nama || !nim || !email || !jurusan){
+            const data = {
+                message: `Semua data harus dikirim`
+            }
+
+            return res.status(201).json(data)
+        }
 
         const value = {
             nama : nama,
@@ -23,41 +39,76 @@ class StudentController {
             jurusan : jurusan
         }
 
-        const students = await Student.create( value )
+        const student = await Student.create( value )
 
         const data = {
-            message: `Menambahkan Students ${students}`,
-            data: students
+            message: `Menambahkan Students ${student}`,
+            data: student
         }
 
-        res.json(data)
+        res.status(201).json(data)
 
     }
 
-    update( req, res){
-        const { id } = req.params;
-        const param = id - 1
-        const { nama } = req.body;
-        hero.splice( param, 1, nama)
-        const data = {
-            message: `Mengedit Data Student id : ${id} Nama : ${ nama }`,
-            data: [...hero],
-        }
+    async update( req, res ){
+        const { id } = req.params
+        const student = Student.find(id)
 
-        res.json(data)
+        if (student) {
+            const student = await Student.update(id, req.body)
+            const data = {
+                message: `Mengedit Data Students`,
+                data: student
+            }
+
+            res.status(200).json(data);
+        } else {
+            const data = {
+                message: `Student Not Found`,
+            }
+
+            res.status(404).json(data);
+        }
 
     }
 
-    destroy( req, res ){
-        const { id } = req.params;
-        const param = id - 1
-        hero.splice(param, 1);
-        const data = {
-            message: `Menghapus Data Students id : ${id}`,
-            data: [...hero],
-        }
+    async destroy( req, res ){
+        const { id } = req.params
+        const student = await Student.find(id)
 
-        res.json(data)
+        if (student) {
+            await Student.delete(id)
+            const data = {
+                message: `Menghapus Data Students`
+            }
+
+            res.status(200).json(data)
+        } else {
+            const data = {
+                message: `Student Not Found`
+            }
+
+            res.status(404).json(data)
+        }
+    }
+
+    async show( req, res ){
+        const { id } = req.params
+        const student = await Student.find(id)
+
+        if (student) {
+            const data = {
+                message: `Menampilkan Data Student`,
+                data: student
+            }
+
+            res.status(200).json(data)
+        } else {
+            const data = {
+                message: `Student Not Found`
+            }
+            res.status(200).json(data)
+        }
     }
 };
 
